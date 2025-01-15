@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Calculator - مدارس الرواد الازدهار</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #1c1c1e;
+            flex-direction: column;
+            color: #fff;
+        }
+        .calculator {
+            width: 500px;
+            background-color: #2c2c2e;
+            border-radius: 20px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        .display {
+            background-color: #222326;
+            color: white;
+            font-size: 36px;
+            padding: 20px;
+            text-align: right;
+            height: 100px;
+            border: none;
+            width: 100%;
+            font-weight: 300;
+            letter-spacing: 1px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+        .button {
+            background-color: #3a3a3c;
+            color: white;
+            font-size: 24px;
+            border: none;
+            border-radius: 15px;
+            padding: 20px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .button:hover {
+            background-color: #565759;
+        }
+        .button:active {
+            background-color: #767676;
+        }
+        .button.operator {
+            background-color: #f08500;
+        }
+        .button.operator:hover {
+            background-color: #db7600;
+        }
+        .button.equal {
+            background-color: #007aff;
+        }
+        .button.equal:hover {
+            background-color: #0051b8;
+        }
+        .button.clear {
+            background-color: #d3d3d3;
+            color: #333;
+        }
+        .button.clear:hover {
+            background-color: #b0b0b0;
+        }
+        .button.memory {
+            background-color: #a9a9a9;
+        }
+        .button.memory:hover {
+            background-color: #818181;
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        .school-name {
+            font-size: 24px;
+            color: purple;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="school-name">
+        مدارس الرواد الازدهار
+    </div>
+
+    <div class="calculator">
+        <input type="text" id="display" class="display" disabled>
+
+        <div class="buttons">
+            <button class="button clear" onclick="clearDisplay()">C</button>
+            <button class="button clear" onclick="clearEntry()">CE</button>
+            <button class="button operator" onclick="appendOperator('/')">÷</button>
+            <button class="button operator" onclick="appendOperator('*')">×</button>
+
+            <button class="button" onclick="appendNumber('7')">7</button>
+            <button class="button" onclick="appendNumber('8')">8</button>
+            <button class="button" onclick="appendNumber('9')">9</button>
+            <button class="button operator" onclick="appendOperator('+')">+</button>
+
+            <button class="button" onclick="appendNumber('4')">4</button>
+            <button class="button" onclick="appendNumber('5')">5</button>
+            <button class="button" onclick="appendNumber('6')">6</button>
+            <button class="button operator" onclick="appendOperator('-')">−</button>
+
+            <button class="button" onclick="appendNumber('1')">1</button>
+            <button class="button" onclick="appendNumber('2')">2</button>
+            <button class="button" onclick="appendNumber('3')">3</button>
+            <button class="button operator" onclick="appendFunction('sin')">sin</button>
+
+            <button class="button" onclick="appendNumber('0')">0</button>
+            <button class="button equal" onclick="calculateResult()">=</button>
+            <button class="button operator" onclick="appendFunction('pi')">π</button>
+            <button class="button operator" onclick="appendFunction('cos')">cos</button>
+
+            <button class="button operator" onclick="appendFunction('tan')">tan</button>
+            <button class="button operator" onclick="appendFunction('exp')">exp</button>
+            <button class="button operator" onclick="appendFunction('sqrt')">√</button>
+            <button class="button operator" onclick="appendFunction('log')">log</button>
+
+            <button class="button memory" onclick="storeMemory()">M+</button>
+            <button class="button memory" onclick="recallMemory()">MR</button>
+            <button class="button memory" onclick="clearMemory()">MC</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = '';
+        let memory = 0;
+
+        function appendNumber(number) {
+            currentInput += number;
+            document.getElementById('display').value = currentInput;
+        }
+
+        function appendOperator(operator) {
+            if (currentInput !== '' && !isNaN(currentInput.charAt(currentInput.length - 1))) {
+                currentInput += ' ' + operator + ' ';
+                document.getElementById('display').value = currentInput;
+            }
+        }
+
+        function appendFunction(func) {
+            if (currentInput !== '') {
+                currentInput += func + '(';
+                document.getElementById('display').value = currentInput;
+            }
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            document.getElementById('display').value = '';
+        }
+
+        function clearEntry() {
+            currentInput = currentInput.slice(0, -1);
+            document.getElementById('display').value = currentInput;
+        }
+
+        function calculateResult() {
+            try {
+                currentInput = currentInput.replace('√', 'Math.sqrt')
+                                           .replace('sin', 'Math.sin')
+                                           .replace('cos', 'Math.cos')
+                                           .replace('tan', 'Math.tan')
+                                           .replace('exp', 'Math.exp')
+                                           .replace('log', 'Math.log')
+                                           .replace('^', '**')
+                                           .replace('pi', 'Math.PI');
+                currentInput = eval(currentInput).toString();
+                document.getElementById('display').value = currentInput;
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+                currentInput = '';
+            }
+        }
+
+        // Memory functions
+        function storeMemory() {
+            memory = parseFloat(currentInput);
+            currentInput = '';
+            document.getElementById('display').value = '';
+        }
+
+        function recallMemory() {
+            currentInput = memory.toString();
+            document.getElementById('display').value = currentInput;
+        }
+
+        function clearMemory() {
+            memory = 0;
+            document.getElementById('display').value = '';
+        }
+    </script>
+
+</body>
+</html>
+
